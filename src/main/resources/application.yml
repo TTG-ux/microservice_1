@@ -1,0 +1,68 @@
+server:
+  port: 8080
+  shutdown: graceful
+
+spring:
+  application:
+    name: task-executor-service
+
+  # H2 Database (file-based, ?????? ???????????)
+  datasource:
+    url: jdbc:h2:file:./data/taskdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # H2 Console ??? ??????? ?????????? ??
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  # JPA / Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+
+  # Flyway ????????
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+# ??? ????????
+app:
+  worker-pool:
+    core-size: 5
+    max-size: 10
+    queue-capacity: 100
+
+# ?????? ?????? ????? (??)
+worker:
+  poll-delay-ms: 100
+
+# Actuator + Metrics
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus,info
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# ???????????
+logging:
+  level:
+    root: INFO
+    by.vl.ws.task2: DEBUG
+    org.hibernate.SQL: DEBUG
